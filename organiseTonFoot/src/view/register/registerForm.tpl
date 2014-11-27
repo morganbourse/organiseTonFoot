@@ -6,7 +6,7 @@
 </h1>
 <div class="row-fluid">
     <div class="span12">
-        <form name="account" id="accountFrm" action="#">
+        <form name="account" id="frm" action="#">
             <fieldset>
                 <div class="span6">
                     <p>Les informations ci-dessous marqu&eacute;es par <sup style="color:red;font-weight:bold;">*</sup> sont obligatoires.</p>

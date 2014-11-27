@@ -418,7 +418,7 @@ class StringUtils {
     {
         if(!is_integer($size))
         {
-            throw new InvalidArgumentException("The size argument must be an integer", "SIZE_ARG_MUST_BE_INT");
+            throw new InvalidArgumentException("The size argument must be an integer");
         }
         
         if($size === 0)
@@ -439,11 +439,11 @@ class StringUtils {
      * @throws InvalidArgumentException
      * @return boolean
      */
-    public static function sizeInferior($str, $size, $includeBound = true)
+    public static function sizeInferior($str, $size, $includeBound = false)
     {
         if(!is_integer($size))
         {
-            throw new InvalidArgumentException("The size argument must be an integer", "SIZE_ARG_MUST_BE_INT");
+            throw new InvalidArgumentException("The size argument must be an integer");
         }
     
         if($size === 0)
@@ -468,11 +468,11 @@ class StringUtils {
      * @throws InvalidArgumentException
      * @return boolean
      */
-    public static function sizeSuperior($str, $size, $includeBound = true)
+    public static function sizeSuperior($str, $size, $includeBound = false)
     {
         if(!is_integer($size))
         {
-            throw new InvalidArgumentException("The size argument must be an integer", "SIZE_ARG_MUST_BE_INT");
+            throw new InvalidArgumentException("The size argument must be an integer");
         }
     
         if($size === 0)

@@ -42,7 +42,7 @@ class AuthController extends Controller
         try
         {
             $player = $this->playerService->authenticate($playerBean);
-            JsonUtils::renderSuccess("Bienvenue " . $player->getSurname() . ".<br />Vous &ecirc;tes maintenant connect&eacute;(e)");    
+            JsonUtils::renderSuccess("Bienvenue " . $player->getSurname() . ".<br />Vous &ecirc;tes maintenant connect&eacute;(e)");
         }
         catch(Exception $e){
             $message = $e->getMessage();

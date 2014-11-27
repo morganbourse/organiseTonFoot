@@ -17,5 +17,15 @@ class RegisterController extends Controller
 	{
 		$this->draw(self::TPL);
 	}
+	
+	/**
+	 * register user
+	 * 
+	 * @param Array $data
+	 */
+	public function register($data)
+	{
+	    JsonUtils::renderSuccess("Utilisateur créé !!");
+	}
 }
 ?>

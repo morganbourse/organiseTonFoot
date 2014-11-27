@@ -5,6 +5,8 @@ require_once (ROOT_DIR_SRC . 'utils/StringUtils.php');
 require_once (ROOT_DIR_SRC . 'utils/CollectionUtils.php');
 require_once (ROOT_DIR_SRC . 'utils/HeaderUtils.php');
 require_once (ROOT_DIR_SRC . 'controller/validator/DataType.php');
+require_once (ROOT_DIR_SRC . 'controller/validator/OperatorType.php');
+require_once (ROOT_DIR . '/src/utils/mail/MailUtils.php');
 
 /**
  * Validator
@@ -67,50 +69,129 @@ abstract class Validator implements IValidator {
             
             $fieldName = $rule ['fieldName'];
             $isMandatory = $rule ['mandatory'];
-            $size = $rule ['size'];
             $dataType = $rule ['dataType'];
             $value = $rule ['value'];
-            $equalValue = $rule ['equalsTo'];
+            
+            $equalValue = array ();
+            
+            if (isset ( $rule ['equalsTo'] )) {
+                $equalValue = $rule ['equalsTo'];
+            }
+            
+            $comparaisonType = null;
+            $expectedSize = null;
+            if (isset ( $rule ['size'] )) {
+                $expectedSizeParts = preg_split( "/ /", $rule ['size'] );
+                $comparaisonType = $expectedSizeParts [0];
+                $expectedSize = (int) $expectedSizeParts [1];
+            }
             
             switch ($dataType) {
                 case DataType::INTEGER :
-                    if (is_null ( $value ) && $isMandatory) {
-                        $fieldErrors [$fieldName] = "obligatoire";
+                    if (! $this->checkMandatory ( $value, $isMandatory )) {
+                        $fieldErrors [$fieldName] = "Le champ est obligatoire.";
                     }
-                    
-                    if (! is_int ( $value )) {
-                        $fieldErrors [$fieldName] = "doit &ecirc;tre un entier";
+                    else if (! is_int ( $value )) {
+                        $fieldErrors [$fieldName] = "La valeur saisie doit &ecirc;tre un chiffre entier";
                     }
-                    else if (is_array ( $equalValue ) && in_array ( $value, $equalValue )) {
-                        $fieldErrors [$fieldName] = "Valeur non valide";
-                    }
-                    else if (isset ( $equalValue ) && ! is_null ( $equalValue ) && $value !== $equalValue) {
-                        $fieldErrors [$fieldName] = "Valeur non valide";
+                    else if (CollectionUtils::isNotEmpty ( $equalValue ) && ! in_array ( $value, $equalValue )) {
+                        $fieldErrors [$fieldName] = "La valeur reçue n'est pas une valeur authoris&eacute;e";
                     }
                     
                     break;
                 
                 case DataType::DECIMAL :
-                    echo "i égal 0";
+                    if (! $this->checkMandatory ( $value, $isMandatory )) {
+                        $fieldErrors [$fieldName] = "Le champ est obligatoire.";
+                    }
+                    else if (! is_numeric ( $value )) {
+                        $fieldErrors [$fieldName] = "La valeur saisie doit &ecirc;tre un chiffre d&eacute;cimal";
+                    }
+                    else if (CollectionUtils::isNotEmpty ( $equalValue ) && ! in_array ( $value, $equalValue )) {
+                        $fieldErrors [$fieldName] = "La valeur reçue n'est pas une valeur authoris&eacute;e";
+                    }
                     break;
                 
                 case DataType::STRING :
-                    echo "i égal 1";
+                    if (! $this->checkMandatory ( $value, $isMandatory )) {
+                        $fieldErrors [$fieldName] = "Le champ est obligatoire.";
+                    }
+                    else if (!is_null($expectedSize) && $this->checkSizeOfValue ( $value, $expectedSize, $comparaisonType )) {
+                        $fieldErrors [$fieldName] = "La valeur ne doit pas d&eacute;passer " . $expectedSize . " caract&egrave;res";
+                    }
+                    else if (CollectionUtils::isNotEmpty ( $equalValue ) && ! in_array ( $value, $equalValue )) {
+                        $fieldErrors [$fieldName] = "La valeur reçue n'est pas une valeur authoris&eacute;e";
+                    }
                     break;
                 
                 case DataType::MAIL :
-                    echo "i égal 2";
+                    if (! $this->checkMandatory ( $value, $isMandatory )) {
+                        $fieldErrors [$fieldName] = "Le champ est obligatoire.";
+                    }
+                    else if (!is_null($expectedSize) && $this->checkSizeOfValue ( $value, $expectedSize, $comparaisonType )) {
+                        $fieldErrors [$fieldName] = "La valeur ne doit pas d&eacute;passer " . $expectedSize . " caract&egrave;res";
+                    }
+                    else if (MailUtils::isValidMail ( $value )) {
+                        $fieldErrors [$fieldName] = "L'adresse mail est invalide.";
+                    }
                     break;
                 
                 case DataType::PHONE :
-                    echo "i égal 2";
+                    if (! $this->checkMandatory ( $value, $isMandatory )) {
+                        $fieldErrors [$fieldName] = "Le champ est obligatoire.";
+                    }
+                    else if (! preg_match ( "/^[0-9]{10}$/", $value )) {
+                        $fieldErrors [$fieldName] = "Le num&eacute;ro de t&eacute;l&eacute;phone est invalide";
+                    }
                     break;
                 
                 case DataType::POSTAL_CODE :
-                    echo "i égal 2";
+                    if (! $this->checkMandatory ( $value, $isMandatory )) {
+                        $fieldErrors [$fieldName] = "Le champ est obligatoire.";
+                    }
+                    else if (! preg_match ( "/^[0-9]{5}$/", $value )) {
+                        $fieldErrors [$fieldName] = "Le code postale est invalide";
+                    }
                     break;
             }
         }
+        
+        return $fieldErrors;
+    }
+    
+    /**
+     * Check if mandatory field is not null
+     *
+     * @param unknown $value            
+     * @return boolean
+     */
+    public function checkMandatory($value, $isMandatory) {
+        return ! ((is_null ( $value ) || (is_string ( $value ) && StringUtils::isBlank ( $value ))) && $isMandatory);
+    }
+    
+    /**
+     * Check size of string value
+     *
+     * @param string $value            
+     * @param string $expectedSize            
+     * @param OperatorType $comparaisonType            
+     * @return boolean
+     */
+    public function checkSizeOfValue($value, $expectedSize, $comparaisonType) {
+        if (StringUtils::equals ( $comparaisonType, OperatorType::SUP_OR_EQUAL_STR )) {
+            return StringUtils::sizeSuperior ( $value, $expectedSize, true );
+        }
+        else if (StringUtils::equals ( $comparaisonType, OperatorType::INF_OR_EQUAL_STR )) {
+            return StringUtils::sizeInferior ( $value, $expectedSize, true );
+        }
+        else if (StringUtils::equals ( $comparaisonType, OperatorType::INFERIOR_STR )) {
+            return StringUtils::sizeInferior ( $value, $expectedSize, false );
+        }
+        else if (StringUtils::equals ( $comparaisonType, OperatorType::SUPERIOR_STR )) {
+            return StringUtils::sizeSuperior ( $value, $expectedSize, false );
+        }
+        
+        return StringUtils::sizeEqual ( $value, $expectedSize );
     }
 }
 ?>

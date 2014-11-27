@@ -13,6 +13,13 @@ class MailUtils
 	
 	const NB_TENTATIVE_MAX = 1;
 	
+	/**
+	 * Constructor
+	 * @param unknown $from
+	 * @param unknown $destinataire
+	 * @param string $expediteurName
+	 * @throws MailFormatException
+	 */
 	public function MailUtils($from, $destinataire, $expediteurName = null)
 	{
 		if(!self::isValidMail($from))

@@ -43,76 +43,75 @@ class RegisterValidator extends Validator {
                         array (
                                         "fieldName" => "login",
                                         "mandatory" => true,
-                                        "size" => "<= 20",                                        
+                                        "size" => "<= 20",
                                         "dataType" => DataType::STRING,
                                         "value" => $login 
                         ),
                         array (
                                         "fieldName" => "pwd",
                                         "mandatory" => true,
-                                        "size" => "<= 20",
+                                        "size" => "<= 255",
                                         "dataType" => DataType::STRING,
                                         "value" => $pwd 
                         ),
                         array (
                                         "fieldName" => "pwdConfirm",
                                         "mandatory" => true,
-                                        "size" => "<= 20",
+                                        "size" => "<= 255",
                                         "dataType" => DataType::STRING,
-                                        "equalsTo" => $pwd,
-                                        "value" => $pwdConfirm
+                                        "equalsTo" => array($pwd),
+                                        "value" => $pwdConfirm 
                         ),
                         array (
                                         "fieldName" => "name",
                                         "mandatory" => true,
                                         "dataType" => DataType::STRING,
-                                        "size" => "<= 20",
-                                        "value" => $name
+                                        "size" => "<= 25",
+                                        "value" => $name 
                         ),
                         array (
                                         "fieldName" => "surname",
                                         "mandatory" => true,
-                                        "size" => "<= 20",
+                                        "size" => "<= 25",
                                         "dataType" => DataType::STRING,
                                         "value" => $surname 
                         ),
                         array (
                                         "fieldName" => "mail",
                                         "mandatory" => true,
-                                        "size" => "<= 20",
+                                        "size" => "<= 100",
                                         "dataType" => DataType::MAIL,
                                         "value" => $mail 
                         ),
                         array (
                                         "fieldName" => "phone",
                                         "mandatory" => true,
-                                        "size" => "<= 20",
                                         "dataType" => DataType::PHONE,
                                         "value" => $phone 
                         ),
                         array (
                                         "fieldName" => "address",
-                                        "mandatory" => true,
-                                        "size" => "<= 20",
+                                        "mandatory" => false,
+                                        "size" => "<= 200",
                                         "dataType" => DataType::STRING,
-                                        "value" => $address
+                                        "value" => $address 
                         ),
                         array (
                                         "fieldName" => "cp",
-                                        "mandatory" => true,
+                                        "mandatory" => false,
                                         "dataType" => DataType::POSTAL_CODE,
                                         "value" => $cp 
                         ),
                         array (
                                         "fieldName" => "city",
-                                        "mandatory" => true,
+                                        "mandatory" => false,
                                         "dataType" => DataType::STRING,
-                                        "size" => "<= 20",
+                                        "size" => "<= 100",
                                         "value" => $city 
                         ) 
         );
-
-        return $fieldErrors;
+        
+        return $this->checkRules ( $rulesArray );
     }
 }
 ?>
