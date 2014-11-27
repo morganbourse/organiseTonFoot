@@ -88,7 +88,7 @@
                                     </div>
                                 </div>
 								
-								{include="layout/baseMenu"}
+								{include="layout/menu/baseMenu"}
                             </div>
                         </div>
                     </div>

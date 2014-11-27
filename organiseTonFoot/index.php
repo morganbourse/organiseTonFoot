@@ -1,4 +1,5 @@
 <?php
+session_start();
 $path = str_replace(DIRECTORY_SEPARATOR,'/',realpath(dirname(__FILE__)));
 
 //define constants

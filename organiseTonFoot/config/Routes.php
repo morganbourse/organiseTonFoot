@@ -27,8 +27,8 @@ class Routes
         /**
          * Register
          */
-        $this->addRoute("/register", "register/Register", "index", HttpMethodsEnum::GET);
-		$this->addRoute("/register", "register/Register", "register", HttpMethodsEnum::POST, null, "register/Register");
+        $this->addRoute("/register", "account/Register", "index", HttpMethodsEnum::GET);
+		$this->addRoute("/register", "account/Register", "register", HttpMethodsEnum::POST, null, "account/Register");
         
         /**
          * Connection

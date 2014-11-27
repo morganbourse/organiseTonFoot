@@ -13,6 +13,9 @@ class AuthController extends Controller
 	const TPL = "auth/authenticateForm";
     private $playerService;
 	
+    /**
+     * Constructor
+     */
     public function AuthController()
     {
         parent::Controller();
@@ -20,11 +23,10 @@ class AuthController extends Controller
     }
     
 	/**
-	 * display register page
+	 * display authentication page
 	 */
 	public function index()
 	{
-		//$this->draw(self::TPL);
         echo $this->getTemplateAsString(self::TPL);
 	}
     

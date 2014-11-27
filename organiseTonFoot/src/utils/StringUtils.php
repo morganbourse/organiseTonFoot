@@ -405,5 +405,87 @@ class StringUtils {
         
         return (strtolower ( $str ) === strtolower ( $str2 ));
     }
+    
+    /**
+     * Check if string contains exactly $size characters
+     * 
+     * @param string $str
+     * @param string $size
+     * @throws InvalidArgumentException if $size is nan
+     * @return boolean
+     */
+    public static function sizeEqual($str, $size)
+    {
+        if(!is_integer($size))
+        {
+            throw new InvalidArgumentException("The size argument must be an integer", "SIZE_ARG_MUST_BE_INT");
+        }
+        
+        if($size === 0)
+        {
+            return self::isBlank($str);
+        }
+        
+        return (strlen($str) === $size);
+    }
+    
+    
+    /**
+     * Check if string lenght is inferior to $size characters
+     * 
+     * @param unknown $str
+     * @param unknown $size
+     * @param boolean $includeBound - include size bound
+     * @throws InvalidArgumentException
+     * @return boolean
+     */
+    public static function sizeInferior($str, $size, $includeBound = true)
+    {
+        if(!is_integer($size))
+        {
+            throw new InvalidArgumentException("The size argument must be an integer", "SIZE_ARG_MUST_BE_INT");
+        }
+    
+        if($size === 0)
+        {
+            return self::isBlank($str);
+        }
+    
+        if($includeBound)
+        {
+            return (strlen($str) <= $size); 
+        }
+        
+        return (strlen($str) < $size);
+    }
+    
+    /**
+     * Check if string lenght is superior to $size characters
+     *
+     * @param unknown $str
+     * @param unknown $size
+     * @param boolean $includeBound - include size bound
+     * @throws InvalidArgumentException
+     * @return boolean
+     */
+    public static function sizeSuperior($str, $size, $includeBound = true)
+    {
+        if(!is_integer($size))
+        {
+            throw new InvalidArgumentException("The size argument must be an integer", "SIZE_ARG_MUST_BE_INT");
+        }
+    
+        if($size === 0)
+        {
+            return self::isBlank($str);
+        }
+    
+        if($includeBound)
+        {
+            return (strlen($str) >= $size);
+        }
+    
+        return (strlen($str) > $size);
+    }
 }
 ?>
