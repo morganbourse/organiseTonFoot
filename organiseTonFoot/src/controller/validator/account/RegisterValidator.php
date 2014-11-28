@@ -111,7 +111,14 @@ class RegisterValidator extends Validator {
                         ) 
         );
         
-        return $this->checkRules ( $rulesArray );
+        $fieldErrors = $this->checkRules ( $rulesArray );
+        
+        if(isset($fieldErrors['pwdConfirm']) && StringUtils::equals(self::UNAUTHORIZED_VALUE_ERR_MSG, $fieldErrors['pwdConfirm']))
+        {
+            $fieldErrors['pwdConfirm'] = "La confirmation du mot de passe doit &ecirc;tre &eacute;gale &agrave; la valeur du mot de passe";
+        }
+        
+        return $fieldErrors;
     }
 }
 ?>

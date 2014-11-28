@@ -15,6 +15,15 @@ require_once (ROOT_DIR . '/src/utils/mail/MailUtils.php');
  *        
  */
 abstract class Validator implements IValidator {
+    const MANDATORY_FIELD_ERR_MSG = "Le champ est obligatoire.";
+    const INVALID_POSTAL_CODE_ERR_MSG = "Le code postale est invalide";
+    const INVALID_PHONE_NUMBER_ERR_MSG = "Le num&eacute;ro de t&eacute;l&eacute;phone est invalide";
+    const INVALID_MAIL_ERR_MSG = "L'adresse mail est invalide.";
+    const INVALID_INT_ERR_MSG = "La valeur saisie doit &ecirc;tre un chiffre entier";
+    const INVALID_DECIMAL_ERR_MSG = "La valeur saisie doit &ecirc;tre un chiffre d&eacute;cimal";
+    const UNAUTHORIZED_VALUE_ERR_MSG = "La valeur reçue n'est pas une valeur authoris&eacute;e";
+    const EXPECTED_SIZE_ERR_MSG = "La valeur ne doit pas d&eacute;passer <expectedSize> caract&egrave;res";
+    const EXPECTED_SIZE_ERR_MSG_PLACHOLDER = "<expectedSize>";
     protected $logger;
     
     /**
@@ -89,79 +98,80 @@ abstract class Validator implements IValidator {
             switch ($dataType) {
                 case DataType::INTEGER :
                     if (! $this->checkMandatory ( $value, $isMandatory )) {
-                        $fieldErrors [$fieldName] = "Le champ est obligatoire.";
+                        $fieldErrors [$fieldName] = self::MANDATORY_FIELD_ERR_MSG;
+                        break;
                     }
                     
                     if (! is_null ( $value ) || empty ( $value )) {
                         if (! is_int ( $value )) {
-                            $fieldErrors [$fieldName] = "La valeur saisie doit &ecirc;tre un chiffre entier";
+                            $fieldErrors [$fieldName] = self::INVALID_INT_ERR_MSG;
                         }
                         else if (CollectionUtils::isNotEmpty ( $equalValue ) && ! in_array ( $value, $equalValue )) {
-                            $fieldErrors [$fieldName] = "La valeur reçue n'est pas une valeur authoris&eacute;e";
+                            $fieldErrors [$fieldName] = self::UNAUTHORIZED_VALUE_ERR_MSG;
                         }
                     }
                     break;
                 
                 case DataType::DECIMAL :
                     if (! $this->checkMandatory ( $value, $isMandatory )) {
-                        $fieldErrors [$fieldName] = "Le champ est obligatoire.";
+                        $fieldErrors [$fieldName] = self::MANDATORY_FIELD_ERR_MSG;
+                        break;
                     }
                     
                     if (! is_null ( $value ) || empty ( $value )) {
                         if (! is_numeric ( $value )) {
-                            $fieldErrors [$fieldName] = "La valeur saisie doit &ecirc;tre un chiffre d&eacute;cimal";
+                            $fieldErrors [$fieldName] = self::INVALID_DECIMAL_ERR_MSG;
                         }
                         else if (CollectionUtils::isNotEmpty ( $equalValue ) && ! in_array ( $value, $equalValue )) {
-                            $fieldErrors [$fieldName] = "La valeur reçue n'est pas une valeur authoris&eacute;e";
+                            $fieldErrors [$fieldName] = self::UNAUTHORIZED_VALUE_ERR_MSG;
                         }
                     }
                     break;
                 
                 case DataType::STRING :
                     if (! $this->checkMandatory ( $value, $isMandatory )) {
-                        $fieldErrors [$fieldName] = "Le champ est obligatoire.";
+                        $fieldErrors [$fieldName] = self::MANDATORY_FIELD_ERR_MSG;
+                        break;
                     }
                     
-                    if (! StringUtils::isBlank ( $value )) {
-                        if (! is_null ( $expectedSize ) && !$this->checkSizeOfValue ( $value, $expectedSize, $comparaisonType )) {
-                            $fieldErrors [$fieldName] = "La valeur ne doit pas d&eacute;passer " . $expectedSize . " caract&egrave;res";
-                        }
-                        else if (CollectionUtils::isNotEmpty ( $equalValue ) && ! in_array ( $value, $equalValue )) {
-                            $fieldErrors [$fieldName] = "La valeur reçue n'est pas une valeur authoris&eacute;e";
-                        }
+                    if (! is_null ( $expectedSize ) && ! $this->checkSizeOfValue ( $value, $expectedSize, $comparaisonType )) {
+                        $fieldErrors [$fieldName] = StringUtils::replace ( self::EXPECTED_SIZE_ERR_MSG, self::EXPECTED_SIZE_ERR_MSG_PLACHOLDER, $expectedSize );
+                    }
+                    else if (CollectionUtils::isNotEmpty ( $equalValue ) && ! in_array ( $value, $equalValue )) {
+                        $fieldErrors [$fieldName] = self::UNAUTHORIZED_VALUE_ERR_MSG;
                     }
                     break;
                 
                 case DataType::MAIL :
                     if (! $this->checkMandatory ( $value, $isMandatory )) {
-                        $fieldErrors [$fieldName] = "Le champ est obligatoire.";
+                        $fieldErrors [$fieldName] = self::MANDATORY_FIELD_ERR_MSG;
+                        break;
                     }
                     
-                    if (! StringUtils::isBlank ( $value )) {
-                        if (! is_null ( $expectedSize ) && !$this->checkSizeOfValue ( $value, $expectedSize, $comparaisonType )) {
-                            $fieldErrors [$fieldName] = "La valeur ne doit pas d&eacute;passer " . $expectedSize . " caract&egrave;res";
-                        }
-                        else if (MailUtils::isValidMail ( $value )) {
-                            $fieldErrors [$fieldName] = "L'adresse mail est invalide.";
-                        }
+                    if (! is_null ( $expectedSize ) && ! $this->checkSizeOfValue ( $value, $expectedSize, $comparaisonType )) {
+                        $fieldErrors [$fieldName] = StringUtils::replace ( self::EXPECTED_SIZE_ERR_MSG, self::EXPECTED_SIZE_ERR_MSG_PLACHOLDER, $expectedSize );
                     }
+                    else if (!MailUtils::isValidMail ( $value )) {
+                        $fieldErrors [$fieldName] = self::INVALID_MAIL_ERR_MSG;
+                    }
+                    
                     break;
                 
                 case DataType::PHONE :
                     if (! $this->checkMandatory ( $value, $isMandatory )) {
-                        $fieldErrors [$fieldName] = "Le champ est obligatoire.";
+                        $fieldErrors [$fieldName] = self::MANDATORY_FIELD_ERR_MSG;
                     }
                     else if (! StringUtils::isBlank ( $value ) && ! preg_match ( "/^[0-9]{10}$/", $value )) {
-                        $fieldErrors [$fieldName] = "Le num&eacute;ro de t&eacute;l&eacute;phone est invalide";
+                        $fieldErrors [$fieldName] = self::INVALID_PHONE_NUMBER_ERR_MSG;
                     }
                     break;
                 
                 case DataType::POSTAL_CODE :
                     if (! $this->checkMandatory ( $value, $isMandatory )) {
-                        $fieldErrors [$fieldName] = "Le champ est obligatoire.";
+                        $fieldErrors [$fieldName] = self::MANDATORY_FIELD_ERR_MSG;
                     }
                     else if (! StringUtils::isBlank ( $value ) && ! preg_match ( "/^[0-9]{5}$/", $value )) {
-                        $fieldErrors [$fieldName] = "Le code postale est invalide";
+                        $fieldErrors [$fieldName] = self::INVALID_POSTAL_CODE_ERR_MSG;
                     }
                     break;
             }
