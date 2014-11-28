@@ -81,9 +81,9 @@ abstract class Validator implements IValidator {
             $comparaisonType = null;
             $expectedSize = null;
             if (isset ( $rule ['size'] )) {
-                $expectedSizeParts = preg_split( "/ /", $rule ['size'] );
+                $expectedSizeParts = preg_split ( "/ /", $rule ['size'] );
                 $comparaisonType = $expectedSizeParts [0];
-                $expectedSize = (int) $expectedSizeParts [1];
+                $expectedSize = ( int ) $expectedSizeParts [1];
             }
             
             switch ($dataType) {
@@ -91,24 +91,29 @@ abstract class Validator implements IValidator {
                     if (! $this->checkMandatory ( $value, $isMandatory )) {
                         $fieldErrors [$fieldName] = "Le champ est obligatoire.";
                     }
-                    else if (! is_int ( $value )) {
-                        $fieldErrors [$fieldName] = "La valeur saisie doit &ecirc;tre un chiffre entier";
-                    }
-                    else if (CollectionUtils::isNotEmpty ( $equalValue ) && ! in_array ( $value, $equalValue )) {
-                        $fieldErrors [$fieldName] = "La valeur reçue n'est pas une valeur authoris&eacute;e";
-                    }
                     
+                    if (! is_null ( $value ) || empty ( $value )) {
+                        if (! is_int ( $value )) {
+                            $fieldErrors [$fieldName] = "La valeur saisie doit &ecirc;tre un chiffre entier";
+                        }
+                        else if (CollectionUtils::isNotEmpty ( $equalValue ) && ! in_array ( $value, $equalValue )) {
+                            $fieldErrors [$fieldName] = "La valeur reçue n'est pas une valeur authoris&eacute;e";
+                        }
+                    }
                     break;
                 
                 case DataType::DECIMAL :
                     if (! $this->checkMandatory ( $value, $isMandatory )) {
                         $fieldErrors [$fieldName] = "Le champ est obligatoire.";
                     }
-                    else if (! is_numeric ( $value )) {
-                        $fieldErrors [$fieldName] = "La valeur saisie doit &ecirc;tre un chiffre d&eacute;cimal";
-                    }
-                    else if (CollectionUtils::isNotEmpty ( $equalValue ) && ! in_array ( $value, $equalValue )) {
-                        $fieldErrors [$fieldName] = "La valeur reçue n'est pas une valeur authoris&eacute;e";
+                    
+                    if (! is_null ( $value ) || empty ( $value )) {
+                        if (! is_numeric ( $value )) {
+                            $fieldErrors [$fieldName] = "La valeur saisie doit &ecirc;tre un chiffre d&eacute;cimal";
+                        }
+                        else if (CollectionUtils::isNotEmpty ( $equalValue ) && ! in_array ( $value, $equalValue )) {
+                            $fieldErrors [$fieldName] = "La valeur reçue n'est pas une valeur authoris&eacute;e";
+                        }
                     }
                     break;
                 
@@ -116,11 +121,14 @@ abstract class Validator implements IValidator {
                     if (! $this->checkMandatory ( $value, $isMandatory )) {
                         $fieldErrors [$fieldName] = "Le champ est obligatoire.";
                     }
-                    else if (!is_null($expectedSize) && $this->checkSizeOfValue ( $value, $expectedSize, $comparaisonType )) {
-                        $fieldErrors [$fieldName] = "La valeur ne doit pas d&eacute;passer " . $expectedSize . " caract&egrave;res";
-                    }
-                    else if (CollectionUtils::isNotEmpty ( $equalValue ) && ! in_array ( $value, $equalValue )) {
-                        $fieldErrors [$fieldName] = "La valeur reçue n'est pas une valeur authoris&eacute;e";
+                    
+                    if (! StringUtils::isBlank ( $value )) {
+                        if (! is_null ( $expectedSize ) && !$this->checkSizeOfValue ( $value, $expectedSize, $comparaisonType )) {
+                            $fieldErrors [$fieldName] = "La valeur ne doit pas d&eacute;passer " . $expectedSize . " caract&egrave;res";
+                        }
+                        else if (CollectionUtils::isNotEmpty ( $equalValue ) && ! in_array ( $value, $equalValue )) {
+                            $fieldErrors [$fieldName] = "La valeur reçue n'est pas une valeur authoris&eacute;e";
+                        }
                     }
                     break;
                 
@@ -128,11 +136,14 @@ abstract class Validator implements IValidator {
                     if (! $this->checkMandatory ( $value, $isMandatory )) {
                         $fieldErrors [$fieldName] = "Le champ est obligatoire.";
                     }
-                    else if (!is_null($expectedSize) && $this->checkSizeOfValue ( $value, $expectedSize, $comparaisonType )) {
-                        $fieldErrors [$fieldName] = "La valeur ne doit pas d&eacute;passer " . $expectedSize . " caract&egrave;res";
-                    }
-                    else if (MailUtils::isValidMail ( $value )) {
-                        $fieldErrors [$fieldName] = "L'adresse mail est invalide.";
+                    
+                    if (! StringUtils::isBlank ( $value )) {
+                        if (! is_null ( $expectedSize ) && !$this->checkSizeOfValue ( $value, $expectedSize, $comparaisonType )) {
+                            $fieldErrors [$fieldName] = "La valeur ne doit pas d&eacute;passer " . $expectedSize . " caract&egrave;res";
+                        }
+                        else if (MailUtils::isValidMail ( $value )) {
+                            $fieldErrors [$fieldName] = "L'adresse mail est invalide.";
+                        }
                     }
                     break;
                 
@@ -140,7 +151,7 @@ abstract class Validator implements IValidator {
                     if (! $this->checkMandatory ( $value, $isMandatory )) {
                         $fieldErrors [$fieldName] = "Le champ est obligatoire.";
                     }
-                    else if (! preg_match ( "/^[0-9]{10}$/", $value )) {
+                    else if (! StringUtils::isBlank ( $value ) && ! preg_match ( "/^[0-9]{10}$/", $value )) {
                         $fieldErrors [$fieldName] = "Le num&eacute;ro de t&eacute;l&eacute;phone est invalide";
                     }
                     break;
@@ -149,7 +160,7 @@ abstract class Validator implements IValidator {
                     if (! $this->checkMandatory ( $value, $isMandatory )) {
                         $fieldErrors [$fieldName] = "Le champ est obligatoire.";
                     }
-                    else if (! preg_match ( "/^[0-9]{5}$/", $value )) {
+                    else if (! StringUtils::isBlank ( $value ) && ! preg_match ( "/^[0-9]{5}$/", $value )) {
                         $fieldErrors [$fieldName] = "Le code postale est invalide";
                     }
                     break;

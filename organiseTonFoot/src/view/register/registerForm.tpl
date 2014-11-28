@@ -6,20 +6,20 @@
 </h1>
 <div class="row-fluid">
     <div class="span12">
-        <form name="account" id="frm" action="#">
+        <form name="account" id="frm" action="{"register"|UrlUtils::rewrite}">
             <fieldset>
                 <div class="span6">
                     <p>Les informations ci-dessous marqu&eacute;es par <sup style="color:red;font-weight:bold;">*</sup> sont obligatoires.</p>
                     <label>Pseudo<sup style="color:red;font-weight:bold;">*</sup> (Le pseudo sera utilisé pour la connexion, 20 caract&egrave;res max.)</label>
-                    <span class="error_message" id="login_error_message"></span>
+                    <span class="error_message" id="username_error_message"></span>
                     <div class="input-control text size4" data-role="input-control">
-                        <input type="text" name="login" maxlength="20" id="login" placeholder="type text">
+                        <input type="text" name="username" maxlength="20" id="username" placeholder="type text">
                         <button class="btn-clear" tabindex="-1" type="button"></button>
                     </div>
                     <label>Mot de passe<sup style="color:red;font-weight:bold;">*</sup></label>
-                    <span class="error_message" id="pwd_error_message"></span>
+                    <span class="error_message" id="password_error_message"></span>
                     <div class="input-control password size4" data-role="input-control">
-                        <input type="password" name="pwd" id="pwd" maxlength="255" autofocus="" placeholder="type password">
+                        <input type="password" name="password" id="password" maxlength="255" autofocus="" placeholder="type password">
                         <button class="btn-reveal" tabindex="-1" type="button"></button>
                     </div>
                     <label>Confirmation du mot de passe<sup style="color:red;font-weight:bold;">*</sup></label>

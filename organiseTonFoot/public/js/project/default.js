@@ -200,7 +200,7 @@ $(document).ready(function () {
     					for(var key in data.fieldErrors)
     					{
     						$("#" + key).parent().addClass("error-state");
-    						$("#" + key + error_message_suffix).html(data.fieldErrors[key]);
+    						$("#" + key + error_message_suffix).html(data.fieldErrors[key] + "<br />");
     						$("#" + key + error_message_suffix).show();
     					}
     				}

@@ -26,8 +26,8 @@ class RegisterValidator extends Validator {
         $city = null;
         
         if (CollectionUtils::isNotEmpty ( $data )) {
-            $login = $data ["login"];
-            $pwd = $data ["pwd"];
+            $login = $data ["username"];
+            $pwd = $data ["password"];
             $pwdConfirm = $data ["pwdConfirm"];
             $name = $data ["name"];
             $surname = $data ["surname"];
@@ -41,14 +41,14 @@ class RegisterValidator extends Validator {
         $fieldErrors = array ();
         $rulesArray = array (
                         array (
-                                        "fieldName" => "login",
+                                        "fieldName" => "username",
                                         "mandatory" => true,
                                         "size" => "<= 20",
                                         "dataType" => DataType::STRING,
                                         "value" => $login 
                         ),
                         array (
-                                        "fieldName" => "pwd",
+                                        "fieldName" => "password",
                                         "mandatory" => true,
                                         "size" => "<= 255",
                                         "dataType" => DataType::STRING,
@@ -85,7 +85,7 @@ class RegisterValidator extends Validator {
                         ),
                         array (
                                         "fieldName" => "phone",
-                                        "mandatory" => true,
+                                        "mandatory" => false,
                                         "dataType" => DataType::PHONE,
                                         "value" => $phone 
                         ),
