@@ -76,7 +76,7 @@
                 </div>
             </fieldset>
             <button class="button success">Valider<i class="icon-checkmark fg-white on-right"></i></button>
-            <a href="#" class="button inverse">Vider le formulaire<i class="icon-cancel-2 fg-white on-right"></i></a>
+            <a href="" class="button inverse" id="resetLink">Vider le formulaire<i class="icon-cancel-2 fg-white on-right"></i></a>
         </form>
     </div>
 </div>

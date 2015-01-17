@@ -16,7 +16,7 @@
                 
         <br />
         <button class="button primary">Connexion<i class="icon-key fg-yellow on-right"></i></button>
-        <a href="#" class="button inverse">S'inscrire<i class="icon-user-2 fg-white on-right"></i></a>        
-        <a href="#" class="button inverse">Mot de passe oubli&eacute; ?</a>
+        <a href="{"register"|UrlUtils::rewrite}" class="button inverse">S'inscrire<i class="icon-user-2 fg-white on-right"></i></a>        
+        <a href="{"lostCredential"|UrlUtils::rewrite}" class="button inverse">Mot de passe oubli&eacute; ?</a>
     </form>    
 </fieldset>

@@ -65,6 +65,49 @@ abstract class Controller {
     }
     
     /**
+     * Map received data to an bean object
+     * 
+     * @param array $data : provided data
+     * @param Object $bean : expected bean object instance
+     * @param [array $mapping] : mapping array as array("name" => "pseudo") for exemple
+     * "name" is the name of provided data, "pseudo" is the name of the mapped attribute into bean object
+     * @ array $ignoreFields : ignore fields mapping of mapped object
+     */
+    protected function mapDataArrayToBean(Array $data, &$bean, Array $mapping = null, Array $ignoreFields = null)
+    {
+        if(CollectionUtils::isNotEmpty($data))
+        {
+            $reflectedBeanObject = new ReflectionObject ( $bean );
+            $beanName = $reflectedBeanObject->getName();
+            foreach($data as $dataName => $value)
+            {
+                if(in_array($dataName, $ignoreFields))
+                {
+                    continue;
+                }
+                
+                if ($reflectedBeanObject->hasProperty ( $dataName )) {
+                    $beanProperty = $reflectedBeanObject->getProperty ( $dataName );
+                    $beanProperty->setAccessible ( true );
+                    $beanProperty->setValue ( $bean, $value );
+                }
+                else if((CollectionUtils::isNotEmpty($mapping) && array_key_exists($dataName, $mapping)) && $reflectedBeanObject->hasProperty ( $mapping[$dataName] ))
+                {
+                    $beanProperty = $reflectedBeanObject->getProperty ( $mapping[$dataName] );
+                    $beanProperty->setAccessible ( true );
+                    $beanProperty->setValue ( $bean, $value );
+                }
+                else 
+                {
+                    $msg = "Property '" . $dataName . "' does not exists in " . $beanName . " object.";
+                    $this->logger->error($msg);
+                    throw new ControllerException($msg);
+                }
+            }
+        }
+    }
+    
+    /**
      * Default controller function
      */
     abstract function index();

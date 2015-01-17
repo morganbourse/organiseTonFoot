@@ -2,7 +2,7 @@
 require_once (ROOT_DIR_SRC . 'controller/validator/Validator.php');
 
 /**
- * AuthValidator
+ * RegisterValidator
  *
  * @author Morgan
  *        
@@ -25,6 +25,7 @@ class RegisterValidator extends Validator {
         $cp = null;
         $city = null;
         
+        //extract data
         if (CollectionUtils::isNotEmpty ( $data )) {
             $login = $data ["username"];
             $pwd = $data ["password"];
@@ -39,6 +40,8 @@ class RegisterValidator extends Validator {
         }
         
         $fieldErrors = array ();
+        
+        //define functionnal rules
         $rulesArray = array (
                         array (
                                         "fieldName" => "username",

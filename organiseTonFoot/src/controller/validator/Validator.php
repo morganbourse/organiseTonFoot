@@ -6,13 +6,14 @@ require_once (ROOT_DIR_SRC . 'utils/CollectionUtils.php');
 require_once (ROOT_DIR_SRC . 'utils/HeaderUtils.php');
 require_once (ROOT_DIR_SRC . 'controller/validator/DataType.php');
 require_once (ROOT_DIR_SRC . 'controller/validator/OperatorType.php');
-require_once (ROOT_DIR . '/src/utils/mail/MailUtils.php');
+require_once (ROOT_DIR_SRC . 'utils/mail/MailUtils.php');
 
 /**
  * Validator
  *
- * @author Morgan
- *        
+ * Validate functionnal rules
+ * 
+ * @author Morgan         
  */
 abstract class Validator implements IValidator {
     const MANDATORY_FIELD_ERR_MSG = "Le champ est obligatoire.";
@@ -102,7 +103,7 @@ abstract class Validator implements IValidator {
                         break;
                     }
                     
-                    if (! is_null ( $value ) || empty ( $value )) {
+                    if (! is_null ( $value ) || ! empty ( $value )) {
                         if (! is_int ( $value )) {
                             $fieldErrors [$fieldName] = self::INVALID_INT_ERR_MSG;
                         }
@@ -118,7 +119,7 @@ abstract class Validator implements IValidator {
                         break;
                     }
                     
-                    if (! is_null ( $value ) || empty ( $value )) {
+                    if (! is_null ( $value ) || ! empty ( $value )) {
                         if (! is_numeric ( $value )) {
                             $fieldErrors [$fieldName] = self::INVALID_DECIMAL_ERR_MSG;
                         }

@@ -6,14 +6,12 @@ require_once (ROOT_DIR_SRC . 'utils/LoggerUtils.php');
  *
  */
 Class SafePDO extends PDO {
-    private $logger;
-    
 	/**
 	 * function exception_handler
 	 * @param unknown_type $exception
 	 */
 	public static function exception_handler($exception) {
-        $this->logger->error('Uncaught exception: ' . $exception->getMessage(), $exception);
+        LoggerUtils::getLogger()->error('Uncaught exception: ' . $exception->getMessage(), $exception);
 		die('Could not connect to the database');
 	}
 
@@ -25,8 +23,6 @@ Class SafePDO extends PDO {
 	 * @param unknown_type $driver_options
 	 */
 	public function __construct($dsn, $username='', $password='', $driver_options=array()) {
-        $this->logger = LoggerUtils::getLogger();
-        
 		// Temporarily change the PHP exception handler while we . . .
 		set_exception_handler(array(__CLASS__, 'exception_handler'));
 

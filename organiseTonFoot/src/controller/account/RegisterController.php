@@ -33,6 +33,10 @@ class RegisterController extends Controller {
      * create player account
      */
     public function register($data) {
+        $playerBean = new PlayerBean();
+        $this->mapDataArrayToBean($data, $playerBean, array("username" => "login", "mail" => "email", "cp" => "postalCode"), array("pwdConfirm"));
+                
+        $this->playerService->register($playerBean);
         JsonUtils::renderSuccess ( "Compte créé" );
     }
 }

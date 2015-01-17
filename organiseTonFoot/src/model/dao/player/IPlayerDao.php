@@ -11,5 +11,14 @@
         * @return Player
         */
         function findByCredentials($login, $pwd);
+        
+        /**
+         * Method register
+         * 
+         * Register player
+         * 
+         * @param Player $player
+         */
+        function register(Player $player);
     }
 ?>

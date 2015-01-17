@@ -41,9 +41,8 @@ try{
 catch(Exception $ex)
 {
     $logger->error("An error as occurred", $ex);
-    
-    $json = array("success" => false, "error" => "Une erreur non g&eacute;r&eacute;e s'est produite, veuillez r&eacute;&eacute;ssayer ult&eacute;rieurement.");
-    JsonUtils::renderJson($json);
+        
+    JsonUtils::renderError("Une erreur non g&eacute;r&eacute;e s'est produite, veuillez r&eacute;&eacute;ssayer ult&eacute;rieurement.");    
 }
 
 /**

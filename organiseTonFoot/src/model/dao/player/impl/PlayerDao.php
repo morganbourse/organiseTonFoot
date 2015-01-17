@@ -17,13 +17,21 @@ class PlayerDao extends GenericDao implements IPlayerDao
     /**
      * @see IPlayerDao::findByCredentials($login, $pwd)
      */
-    function findByCredentials($login, $pwd) {
+    public function findByCredentials($login, $pwd) {
         $query = $this->database->prepare("SELECT * FROM Players WHERE login = :login AND password = :pwd;");
         $query->execute(array( 'login' => $login, 'pwd' => $pwd ));
         $refletedObject = new ReflectionObject(new Player());
 		$query->setFetchMode(PDO::FETCH_CLASS, $refletedObject->getName());
        
 		return $query->fetch();
-    }	
+    }
+        
+    /**
+     * @see IPlayerDao::register()
+     */
+    public function register(Player $player)
+    {
+        $this->insert($player);
+    }
 }
 ?>

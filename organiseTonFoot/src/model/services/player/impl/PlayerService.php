@@ -54,6 +54,23 @@ class PlayerService implements IPlayerService
     }
     
     /**
+     * @see IPlayerService::register()
+     */
+    public function register(PlayerBean $playerBean)
+    {
+        LoggerUtils::getLogger()->debug("user registration...");       
+        
+        //hash the password and set into playerBean object
+        $hashPassword = $this->hashPassword($playerBean->getLogin(), $playerBean->getPassword());
+        $playerBean->setPassword($hashPassword);
+        
+        //map player bean to player entity object
+        $player = new Player();
+        $this->playerDao->mapBeanToDo($playerBean, $player);
+        $this->playerDao->insert($player);
+    }
+    
+    /**
      * PlayerService::hashPassword($pwd)
      * 
      * hash password

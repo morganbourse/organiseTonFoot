@@ -164,6 +164,24 @@ class StringUtils {
     }
     
     /**
+     * extract string by pattern from other string
+     * 
+     * @param String $pattern
+     * @param String $str
+     * @return String
+     */
+    public static function extractFromStr($pattern, $str)
+    {
+        if(StringUtils::isBlank($str))
+        {
+            return null;
+        }
+        
+        preg_match($pattern, $str, $matches);
+        return $matches[1];
+    }
+    
+    /**
      * Checks if a given string starts with a given value
      *
      * @param string $str

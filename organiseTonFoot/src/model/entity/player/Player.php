@@ -1,4 +1,12 @@
 <?php
+	/**
+	 * @author Morgan
+	 * @since 15 janv. 2015
+	 *
+	 * The Player class
+	 * 
+	 * @entity Players
+	 */
 	class Player
 	{
 		private $login;
