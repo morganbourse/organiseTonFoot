@@ -9,5 +9,3 @@
         </div>
     </div>
 </div>
-
-<a href='{"authentication"|UrlUtils::rewrite}' id="connexionLink">connexion</a>

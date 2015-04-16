@@ -1,7 +1,7 @@
 <?php
-require_once (ROOT_DIR_SRC . 'controller/Controller.php');
-require_once (ROOT_DIR_SRC . 'controller/bean/player/PlayerBean.php');
-require_once (ROOT_DIR_SRC . 'model/services/player/impl/PlayerService.php');
+importController('Controller.php');
+importBean('player/PlayerBean.php');
+importModel('services/player/impl/PlayerService.php');
 
 /**
  *
@@ -34,10 +34,10 @@ class RegisterController extends Controller {
      */
     public function register($data) {
         $playerBean = new PlayerBean();
-        $this->mapDataArrayToBean($data, $playerBean, array("username" => "login", "mail" => "email", "cp" => "postalCode"), array("pwdConfirm"));
+        MapperUtils::mapDataArrayToObject($data, $playerBean, array("username" => "login", "mail" => "email", "cp" => "postalCode"), array("pwdConfirm"));
                 
         $this->playerService->register($playerBean);
-        JsonUtils::renderSuccess ( "Compte créé" );
+        JsonUtils::renderSuccessAndDisplayPage( "Compte créé", $this->getTemplateAsString("register/registerSuccess") );
     }
 }
 ?>

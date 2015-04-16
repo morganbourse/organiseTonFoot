@@ -1,5 +1,5 @@
 <?php
-require_once (ROOT_DIR_SRC . 'utils/IniManager.php');
+importUtil('IniManager.php');
 class ConfigUtils
 {
     const CONFIG_INI_FILE = "config.ini";

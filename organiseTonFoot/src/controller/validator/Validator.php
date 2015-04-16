@@ -1,12 +1,12 @@
 <?php
-require_once (ROOT_DIR_SRC . 'controller/validator/IValidator.php');
-require_once (ROOT_DIR_SRC . 'utils/JsonUtils.php');
-require_once (ROOT_DIR_SRC . 'utils/StringUtils.php');
-require_once (ROOT_DIR_SRC . 'utils/CollectionUtils.php');
-require_once (ROOT_DIR_SRC . 'utils/HeaderUtils.php');
-require_once (ROOT_DIR_SRC . 'controller/validator/DataType.php');
-require_once (ROOT_DIR_SRC . 'controller/validator/OperatorType.php');
-require_once (ROOT_DIR_SRC . 'utils/mail/MailUtils.php');
+importValidator('IValidator.php');
+importUtil('JsonUtils.php');
+importUtil('StringUtils.php');
+importUtil('CollectionUtils.php');
+importUtil('HeaderUtils.php');
+importUtil('mail/MailUtils.php');
+importValidator('DataType.php');
+importValidator('OperatorType.php');
 
 /**
  * Validator
@@ -214,6 +214,6 @@ abstract class Validator implements IValidator {
         }
         
         return StringUtils::sizeEqual ( $value, $expectedSize );
-    }
+    }    
 }
 ?>

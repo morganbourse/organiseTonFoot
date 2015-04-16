@@ -1,5 +1,5 @@
 <?php
-require_once (ROOT_DIR_SRC . 'controller/Controller.php'); 
+importController('Controller.php');
 
 /**
  * HomeController

@@ -78,9 +78,18 @@ $(document).ready(function () {
 
     
     $(".history-back").on("click", function(e){
-        e.preventDefault();
-        history.back();
-        return false;
+    	var href = $(this).attr("href");
+
+    	//if no location, then history.back()
+    	if(href ==  null || href == "" || href == "#")
+    	{
+    		e.preventDefault();
+    		history.back();
+    		return false;
+    	}
+    	
+    	//otherwise, redirect to the href location
+    	window.location.href = href;
     });
     
     /**
@@ -194,7 +203,7 @@ $(document).ready(function () {
     				if (typeof data.fieldErrors != 'undefined' && data.fieldErrors != null) {
     					if(typeof onFailedClbk === 'function')
                     	{
-    						onFailedClbk();
+    						onFailedClbk(data);
                     	}
     					
     					for(var key in data.fieldErrors)
@@ -223,9 +232,15 @@ $(document).ready(function () {
     					$().displaySuccessNotification(data.successMessage, 10000);
     				}
                     
+                    //display html page if given in json data
+                    if(data.html != null && data.html.length > 0)
+                	{
+                    	$(".page-content").html(data.html);
+                	}
+                    
                     if(typeof onSuccessClbk === 'function')
                 	{
-                    	onSuccessClbk();
+                    	onSuccessClbk(data);
                 	}
     			}
     		}
@@ -263,9 +278,9 @@ $(document).ready(function () {
     $("#frm").submit(
         function(event)
         {        	
-            $().executeQuery(event, $(this), $(this).attr("action"), function(){
-            	//success function
-            }, function(){
+            $().executeQuery(event, $(this), $(this).attr("action"), function(data){
+            	//success function            	
+            }, function(data){
             	//failed function
             	$().displayWarnNotification("Veuillez verifier le formulaire de connexion.<br /><br />Certaines donn&eacute;es envoy&eacute;es sont incorrectes, ou non renseign&eacute;es", 10000);
             });
@@ -280,5 +295,24 @@ $(document).ready(function () {
             frm[0].reset();
         }
     );
+    
+    //goto top page link
+    $(window).scroll(function() {
+	  if($(window).scrollTop() == 0){
+	    $('#scrollToTop').fadeOut("fast");
+	  } else {
+	    if($('#scrollToTop').length == 0){
+	      $('body').append('<div id="scrollToTop">'+
+	        '<a href="#"><i class="icon-arrow-up-5 fg-darker"></i></a>'+
+	        '</div>');
+	    }
+	    $('#scrollToTop').fadeIn("fast");
+	  }
+	});
+    
+    $(document).on('click', '#scrollToTop a', function(event){
+    	  event.preventDefault();
+    	  $('html,body').animate({scrollTop: 0}, 'slow');
+    });
 });
 

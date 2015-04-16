@@ -1,5 +1,5 @@
 <?php
-require_once (ROOT_DIR_SRC . 'utils/LoggerUtils.php');
+importUtil('LoggerUtils.php');
 /**
  * Read ini file easyly
  * @author Morgan

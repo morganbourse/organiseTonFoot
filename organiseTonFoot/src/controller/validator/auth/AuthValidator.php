@@ -1,42 +1,43 @@
 <?php
-require_once (ROOT_DIR_SRC . 'controller/validator/Validator.php');
+importValidator ( 'Validator.php' );
 
 /**
  * AuthValidator
- * @author Morgan
  *
+ * @author Morgan
+ *        
  */
-class AuthValidator extends Validator
-{
+class AuthValidator extends Validator {
     /**
+     *
      * @see IValidator->validate(Array $data)
      */
-	public function validate(Array $data)
-    {
-        $login = null;
-        $pwd = null;
-        if(CollectionUtils::isNotEmpty($data))
-        {
-            if(isset($data["login"]) && isset($data["pwd"]))
-            {
-                $login = $data["login"];
-                $pwd = $data["pwd"];   
+    public function validate(Array $data) {        
+        if (CollectionUtils::isNotEmpty ( $data )) {
+            if (isset ( $data ["login"] ) && isset ( $data ["pwd"] )) {
+                $login = $data ["login"];
+                $pwd = $data ["pwd"];
+                
+                $rules = array (
+                                array (
+                                                "fieldName" => "login",
+                                                "mandatory" => true,
+                                                "dataType" => DataType::STRING,
+                                                "value" => $login 
+                                ),
+                                array (
+                                                "fieldName" => "pwd",
+                                                "mandatory" => true,
+                                                "dataType" => DataType::STRING,
+                                                "value" => $pwd 
+                                ) 
+                );
+                
+                return $this->checkRules($rules);
             }
         }
         
-        $fieldErrors = array();
-		
-		if(StringUtils::isBlank($login))
-		{
-			$fieldErrors['login'] = 'Veuillez renseigner le nom d\'utilisateur';			
-		}
-
-		if(StringUtils::isBlank($pwd))
-		{
-			$fieldErrors['pwd'] = 'Veuillez renseigner le mot de passe';			
-		}
-		
-		return $fieldErrors;
+        return null;
     }
 }
 ?>

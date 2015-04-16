@@ -1,5 +1,5 @@
 <?php
-require_once (ROOT_DIR_SRC . 'vendors/JSON.php');
+importLib('JSON.php');
 
 class JsonUtils
 {
@@ -23,6 +23,8 @@ class JsonUtils
     /**
 	 * renderError
 	 * 
+	 * Display error message at screen
+	 * 
 	 * @param String $errorMessage
      * @param [string] $httpCode
 	 */
@@ -35,12 +37,29 @@ class JsonUtils
     /**
 	 * renderSuccess
 	 * 
-	 * @param String $successMessage     
+	 * Display success message at screen and redirect
+	 * 
+	 * @param String $successMessage : msg to display
+	 * @param String $redirectTo : url to redirect
 	 */
-	public static function renderSuccess($successMessage)
+	public static function renderSuccess($successMessage, $redirectTo = null)
 	{
-	    $json = array("success" => true, "successMessage" => $successMessage);
+	    $json = array("success" => true, "successMessage" => $successMessage, "redirectTo" => $redirectTo);
         self::renderJson($json);
+	}
+	
+	/**
+	 * renderSuccess
+	 *
+	 * Display success message at screen and redirect
+	 *
+	 * @param String $successMessage : msg to display
+	 * @param String $html : html page to show
+	 */
+	public static function renderSuccessAndDisplayPage($successMessage, $html = null)
+	{
+	    $json = array("success" => true, "successMessage" => $successMessage, "html" => $html);
+	    self::renderJson($json);
 	}
 }
 ?>

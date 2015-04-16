@@ -1,5 +1,5 @@
 <h1>
-    <a class="history-back" href="#">
+    <a class="history-back" href=''>
     <i class="icon-arrow-left-3 fg-darker smaller"></i>
     </a>
     Compte utilisateur
@@ -11,9 +11,9 @@
                 <div class="span6">
                     <p>Les informations ci-dessous marqu&eacute;es par <sup style="color:red;font-weight:bold;">*</sup> sont obligatoires.</p>
                     <label>Pseudo<sup style="color:red;font-weight:bold;">*</sup> (Le pseudo sera utilisé pour la connexion, 20 caract&egrave;res max.)</label>
-                    <span class="error_message" id="username_error_message"></span>
+                    <span class="error_message" id="login_error_message"></span>
                     <div class="input-control text size4" data-role="input-control">
-                        <input type="text" name="username" maxlength="20" id="username" placeholder="type text">
+                        <input type="text" name="login" maxlength="20" id="login" placeholder="type text">
                         <button class="btn-clear" tabindex="-1" type="button"></button>
                     </div>
                     <label>Mot de passe<sup style="color:red;font-weight:bold;">*</sup></label>
@@ -41,9 +41,9 @@
                         <button class="btn-clear" tabindex="-1" type="button"></button>
                     </div>
                     <label>E-mail (100 caract&egrave;res max.) <sup style="color:red;font-weight:bold;">*</sup></label>
-                    <span class="error_message" id="mail_error_message"></span>
+                    <span class="error_message" id="email_error_message"></span>
                     <div class="input-control text size4" data-role="input-control">
-                        <input type="text" name="mail" id="mail" maxlength="100" placeholder="type text">
+                        <input type="text" name="email" id="email" maxlength="100" placeholder="type text">
                         <button class="btn-clear" tabindex="-1" type="button"></button>
                     </div>
                     <label>T&eacute;l&eacute;phone (Uniquement des chiffres, 10 caract&egrave;res max.)</label>
@@ -62,9 +62,9 @@
                         <button class="btn-clear" tabindex="-1" type="button"></button>
                     </div>
                     <label>Code postale (num&eacute;rique, 5 caract&egrave;res max.)</label>
-                    <span class="error_message" id="cp_error_message"></span>
+                    <span class="error_message" id="postalCode_error_message"></span>
                     <div class="input-control text size4" data-role="input-control">
-                        <input type="text" name="cp" id="cp" maxlength="5" placeholder="type text">
+                        <input type="text" name="postalCode" id="postalCode" maxlength="5" placeholder="type text">
                         <button class="btn-clear" tabindex="-1" type="button"></button>
                     </div>
                     <label>Ville (num&eacute;rique, 100 caract&egrave;res max.)</label>
