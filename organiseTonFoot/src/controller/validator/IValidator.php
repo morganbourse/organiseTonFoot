@@ -1,7 +1,7 @@
 <?php
-importUtil('CollectionUtils.php');
-importUtil('StringUtils.php');
-importUtil('LoggerUtils.php');
+require_once (ROOT_DIR_SRC . 'utils/CollectionUtils.php');
+require_once (ROOT_DIR_SRC . 'utils/StringUtils.php');
+require_once (ROOT_DIR_SRC . 'utils/LoggerUtils.php');
 
 /**
  * Interface IValidator

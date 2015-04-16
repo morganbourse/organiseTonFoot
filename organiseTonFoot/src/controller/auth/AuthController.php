@@ -1,7 +1,7 @@
 <?php
-importController('Controller.php');
-importBean('player/PlayerBean.php');
-importModel('services/player/impl/PlayerService.php');
+require_once (ROOT_DIR_SRC . 'controller/Controller.php');
+require_once (ROOT_DIR_SRC . 'controller/bean/player/PlayerBean.php');
+require_once (ROOT_DIR_SRC . 'model/services/player/impl/PlayerService.php');
 
 /**
  * AuthController

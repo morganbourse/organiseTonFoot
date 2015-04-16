@@ -1,12 +1,11 @@
 <?php
-importModel('services/player/IPlayerService.php');
-importSrc('errors/IPlayerErrors.php');
-importModel('dao/player/impl/PlayerDao.php');
-importUtil('conf/ConfigUtils.php');
-importController('bean/player/PlayerBean.php');
-importModel('entity/player/Player.php');
-importUtil('LoggerUtils.php');
-importUtil('MapperUtils.php');
+require_once (ROOT_DIR_SRC . 'model/services/player/IPlayerService.php');
+require_once (ROOT_DIR_SRC . 'errors/IPlayerErrors.php');
+require_once (ROOT_DIR_SRC . 'model/dao/player/impl/PlayerDao.php');
+require_once (ROOT_DIR_SRC . 'utils/conf/ConfigUtils.php');
+require_once (ROOT_DIR_SRC . 'controller/bean/player/PlayerBean.php');
+require_once (ROOT_DIR_SRC . 'model/entity/player/Player.php');
+require_once (ROOT_DIR_SRC . 'utils/LoggerUtils.php');
 
 /**
  * PlayerService
@@ -67,24 +66,8 @@ class PlayerService implements IPlayerService
         
         //map player bean to player entity object
         $player = new Player();
-        MapperUtils::mapObjects($playerBean, $player);
-        
-        //open transaction
-        $this->playerDao->beginTransaction();
-        
-        try {
-            $this->playerDao->insert($player);
-            
-            //send confirmation mail
-            
-            $this->playerDao->commitTransaction();
-        }
-        catch (Exception $e)
-        {
-            $this->playerDao->rollbackTransaction();
-            LoggerUtils::getLogger()->error("An error has occured during the transaction.", $e);
-            throw $e;
-        }
+        $this->playerDao->mapBeanToDo($playerBean, $player);
+        $this->playerDao->insert($player);
     }
     
     /**

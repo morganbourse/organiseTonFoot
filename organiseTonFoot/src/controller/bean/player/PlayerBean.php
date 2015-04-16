@@ -1,61 +1,14 @@
 <?php
-    importValidatorAnnotation('NotBlank.php');
-    importValidatorAnnotation('PhoneNumber.php');
-    importValidatorAnnotation('Mail.php');
-    importValidatorAnnotation('PostalCode.php');
-    importValidatorAnnotation('Lenght.php');
-    
 	class PlayerBean
 	{
-		/** 
-		 * @NotBlank
-		 * @Lenght(max = 20)
-		 */
 		private $login;
-        
-		/**
-		 * @NotBlank
-		 * @Lenght(min=5, max = 255)
-		 */
         private $password;
-        
-        /**
-         * @NotBlank
-         * @Lenght(max = 25)
-         */
         private $name;
-        
-        /**
-         * @NotBlank
-         * @Lenght(max = 25)
-         */
         private $surname;
-        
-        /**
-         * @PhoneNumber(errorMsg = "telephone incorrect (ex: 00 00 00 00 00)")
-         */
         private $phone;
-        
-        /**
-         * @Mail
-         * @NotBlank
-         * @Lenght(max = 100)
-         */
         private $email;
-        
-        /**
-         * @Lenght(max = 200)
-         */
         private $address;
-        
-        /**
-         * @PostalCode
-         */
         private $postalCode;
-        
-        /**
-         * @Lenght(max = 100)
-         */
         private $city;
 		
         /**

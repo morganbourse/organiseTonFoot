@@ -1,5 +1,5 @@
 <?php
-importUtil('StringUtils.php');
+require_once (ROOT_DIR . '/src/utils/StringUtils.php');
 class HeaderUtils
 {
 	/**

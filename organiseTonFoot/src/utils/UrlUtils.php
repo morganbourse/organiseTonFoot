@@ -1,5 +1,5 @@
 <?php
-importUtil('StringUtils.php');
+require_once (ROOT_DIR_SRC . 'utils/StringUtils.php');
 
 /**
  * @author Morgan

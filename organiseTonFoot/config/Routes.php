@@ -1,8 +1,8 @@
 <?php
-importUtil('CollectionUtils.php');
-importUtil('StringUtils.php');
-importUtil('LoggerUtils.php');
-importUtil('HttpMethodsEnum.php');
+require_once (ROOT_DIR_SRC . 'utils/CollectionUtils.php');
+require_once (ROOT_DIR_SRC . 'utils/StringUtils.php');
+require_once (ROOT_DIR_SRC . 'utils/LoggerUtils.php');
+require_once (ROOT_DIR_SRC . 'utils/HttpMethodsEnum.php');
 
 class Routes
 {
@@ -11,7 +11,6 @@ class Routes
 	const VERB_ROUTE_INDEX = "verb";
 	const PARAMS_ROUTE_INDEX = "params";
     const VALIDATOR_ROUTE_INDEX = "validator";
-    const BEAN_ROUTE_INDEX = "bean";
 	
 	private static $instance = null;
 		
@@ -29,20 +28,13 @@ class Routes
          * Register
          */
         $this->addRoute("/register", "account/Register", "index", HttpMethodsEnum::GET);
-		$this->addRoute("/register", "account/Register", "register", HttpMethodsEnum::POST, null, "account/Register", "player/PlayerBean");
+		$this->addRoute("/register", "account/Register", "register", HttpMethodsEnum::POST, null, "account/Register");
         
         /**
          * Connection
          */
 		$this->addRoute("/authentication", "auth/Auth", "index", HttpMethodsEnum::GET);
         $this->addRoute("/authentication", "auth/Auth", "authentify", HttpMethodsEnum::POST, null, "auth/Auth");
-        
-        /**
-         * Address
-         */
-        $this->addRoute("/address/list", "address/Address", "index", HttpMethodsEnum::GET);
-        $this->addRoute("/address/add", "address/Address", "addPage", HttpMethodsEnum::GET);
-        $this->addRoute("/address/add", "address/Address", "add", HttpMethodsEnum::POST, null, "address/AddAddress");
 				
 		/**
 		 * exemple de routes avec des paramètres
@@ -53,31 +45,17 @@ class Routes
 		 * exemple de routes avec un validator
 		 */
 		//$this->addRoute("/contact/mail", "contact/Contact", "sendMail", HttpMethodsEnum::POST, null, "contact/ContactSendMail");
-		
-        /**
-         * exemple de route avec un validator basé sur la validation par annotation sur le bean
-         */
-        //$this->addRoute("/register", "account/Register", "register", HttpMethodsEnum::POST, null, "account/Register", "player/PlayerBean");
-        
-        /**
-         * exemple de route avec une validation automatique basée sur les annotations du bean
-         */
-        //$this->addRoute("/register", "account/Register", "register", HttpMethodsEnum::POST, null, null, "player/PlayerBean");
 	}
 	
 	/**
 	 * Add a route for REST routing
 	 * 
-	 * @param string $url : url pattern
-	 * @param string $controller : controller name
-	 * @param string $controllerMethod : controller executed method
-	 * @param [string $verb] : Http verb (GET/POST)
-	 * @param [Array $params] : Url parameters if the contains parameters in the url pattern
-	 * @param [string $validator] : validator name executed on this request
-	 * @param [string $bean] : bean name used by this request. If this specified and $validator is null then
-	 *                         automatic validation based on bean annotations is executed 
+	 * @param unknown $url
+	 * @param unknown $controller
+	 * @param unknown $controllerMethod
+	 * @param string $verb
 	 */
-	public function addRoute($url, $controller, $controllerMethod, $verb = HttpMethodsEnum::GET, Array $params = null, $validator = null, $bean = null)
+	public function addRoute($url, $controller, $controllerMethod, $verb = HttpMethodsEnum::GET, Array $params = null, $validator = null)
 	{
 		if(StringUtils::isBlank($verb))
 		{
@@ -89,8 +67,7 @@ class Routes
 				self::METHOD_ROUTE_INDEX => $controllerMethod,
 				self::VERB_ROUTE_INDEX => $verb,
 				self::PARAMS_ROUTE_INDEX => $params,
-                self::VALIDATOR_ROUTE_INDEX => $validator,
-		        self::BEAN_ROUTE_INDEX => $bean
+                self::VALIDATOR_ROUTE_INDEX => $validator
 		);
 	}
 	
@@ -99,7 +76,7 @@ class Routes
 	 * and return an array with elements
 	 * 
 	 * @param string $url
-	 * @return Array representing route or null if route not matched
+	 * @return Array or null if route not matched
 	 */
 	public function match($url)
 	{

@@ -17,7 +17,7 @@ class LoggerUtils
 	public static function getLogger() {
         if(is_null(self::$instance))
         {
-            importLib('log4php/Logger.php');
+            require_once(ROOT_DIR_SRC . 'vendors/log4php/Logger.php');
             Logger::configure(ROOT_DIR_CONFIG . 'log4php.xml');
             self::$instance = Logger::getLogger('default'); 
         }

@@ -1,8 +1,8 @@
 <?php
-importConfig('Routes.php');
-importUtil('HeaderUtils.php');
-importUtil('LoggerUtils.php');
-importUtil('StringUtils.php');
+require_once (ROOT_DIR_CONFIG . 'Routes.php');
+require_once (ROOT_DIR_SRC . 'utils/HeaderUtils.php');
+require_once (ROOT_DIR_SRC . 'utils/LoggerUtils.php');
+require_once (ROOT_DIR_SRC . 'utils/StringUtils.php');
 
 /**
  * Dispatch request for call controller method
@@ -14,22 +14,24 @@ class FrontController {
 	const CONTROLLER_EXTENSION = "Controller";
     const VALIDATOR_EXTENSION = "Validator";
     const STANDARD_VALIDATOR_METHOD_NAME = "validateInputs";
+	const PHP_EXTENSION = ".php";
 	const DEFAULT_URL = "/home";
 	const REST_URL = "QUERY_STRING";
-	const DEFAULT_BEAN_VALIDATOR = "bean/Bean";
 	
 	protected $controller;
+	protected $controllerPath;
+    protected $validatorPath;
 	protected $action;
 	protected $params = array ();
-    protected $validator;
-    protected $bean;
-    protected $autoValidator = false;
+    protected $validator;    
 	protected $basePath = "/";
     private $logger;
 	
 	public function __construct() {
         $this->logger = LoggerUtils::getLogger();
        
+		$this->controllerPath = DIRECTORY_SEPARATOR . "src" . DIRECTORY_SEPARATOR . "controller". DIRECTORY_SEPARATOR;
+        $this->validatorPath = DIRECTORY_SEPARATOR . "src" . DIRECTORY_SEPARATOR . "controller". DIRECTORY_SEPARATOR . "validator" . DIRECTORY_SEPARATOR;
 		$this->parseUri ();
 		$this->run ();
 	}
@@ -54,18 +56,8 @@ class FrontController {
 			return;
 		}
 		
-		//auto validation enabled ?
-		$validatorName = $routeInfo[Routes::VALIDATOR_ROUTE_INDEX];
-		$beanName = $routeInfo[Routes::BEAN_ROUTE_INDEX];
-		$this->autoValidator = StringUtils::isBlank($validatorName) && !StringUtils::isBlank($beanName);
-		if($this->autoValidator)
-		{
-		    $validatorName = self::DEFAULT_BEAN_VALIDATOR;
-		}
-		
-	    $this->setBean($beanName, $route); 
-        $this->setValidator($validatorName, $route);
 		$this->setController($routeInfo[Routes::CONTROLLER_ROUTE_INDEX], $route);
+        $this->setValidator($routeInfo[Routes::VALIDATOR_ROUTE_INDEX], $route);
 		$this->setAction($routeInfo[Routes::METHOD_ROUTE_INDEX]);
 		$this->setParams($routeInfo[Routes::PARAMS_ROUTE_INDEX]);
 	}
@@ -78,7 +70,7 @@ class FrontController {
 	 * @throws InvalidArgumentException
 	 */
 	protected function setController($controller, $route) {
-		$controllerPath = ROOT_DIR_CONTROLLERS . $controller . self::CONTROLLER_EXTENSION . PHP_EXTENSION;
+		$controllerPath = ROOT_DIR . $this->controllerPath . $controller . self::CONTROLLER_EXTENSION . self::PHP_EXTENSION;
 		$controller = ucfirst(basename($controller)) . self::CONTROLLER_EXTENSION;		
 		
 		if (!is_file ( $controllerPath )) {
@@ -106,7 +98,7 @@ class FrontController {
             return;
         }
     
-		$validatorPath = ROOT_DIR_VALIDATORS . $validator . self::VALIDATOR_EXTENSION . PHP_EXTENSION;
+		$validatorPath = ROOT_DIR . $this->validatorPath . $validator . self::VALIDATOR_EXTENSION . self::PHP_EXTENSION;
 		$validator = ucfirst(basename($validator)) . self::VALIDATOR_EXTENSION;		
 		
 		if (!is_file ( $validatorPath )) {
@@ -124,34 +116,6 @@ class FrontController {
         if (!$reflector->hasMethod ( self::STANDARD_VALIDATOR_METHOD_NAME )) {
 			throw new InvalidArgumentException ( "The validator does not respect the standard and has no named 'validate' method" );
 		}
-	}
-	
-	/**
-	 * set the bean if is specified
-	 *
-	 * @param unknown $bean
-	 * @param unknown $route
-	 * @throws InvalidArgumentException
-	 */
-	protected function setBean($bean, $route) {
-	    if(StringUtils::isBlank($bean))
-	    {
-	        return;
-	    }
-	
-	    $beanPath = ROOT_DIR_BEANS . $bean . PHP_EXTENSION;
-	    $bean = ucfirst(basename($bean));
-	
-	    if (!is_file ( $beanPath )) {
-	        throw new InvalidArgumentException ( "The bean cannot be found for route $route." );
-	    }
-	
-	    require_once ($beanPath);
-	
-	    if (! class_exists ( $bean )) {
-	        throw new InvalidArgumentException ( "The bean cannot be found for route $route." );
-	    }
-	    $this->bean = $bean;
 	}
 	
 	/**
@@ -189,17 +153,10 @@ class FrontController {
         $isValid = true;
         if(!StringUtils::isBlank($this->validator))
         {
-            $methodParams = array($this->params);
-            if(!StringUtils::isBlank($this->bean))
-            {
-                $bean = new $this->bean();
-                $methodParams[] = $bean;
-            }
-            
         	$isValid = call_user_func_array ( array (
         			new $this->validator(),
         			self::STANDARD_VALIDATOR_METHOD_NAME 
-        	), $methodParams);
+        	), array($this->params));
         }
         
         if(!StringUtils::isBlank($this->controller) && $isValid)

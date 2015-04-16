@@ -300,6 +300,9 @@ class StringUtils {
      *            Input string
      * @return bool
      * @static
+     *
+     *
+     *
      */
     public static function isBlank($str) {
         $str = strval ( $str );
@@ -489,7 +492,12 @@ class StringUtils {
         {
             throw new InvalidArgumentException("The size argument must be an integer");
         }
-        
+    
+        if($size === 0)
+        {
+            return self::isBlank($str);
+        }
+    
         if($includeBound)
         {
             return (strlen($str) >= $size);

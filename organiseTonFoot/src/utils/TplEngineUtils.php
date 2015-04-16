@@ -1,7 +1,7 @@
 <?php
-importUtil('CollectionUtils.php');
-importUtil('StringUtils.php');
-importUtil('LoggerUtils.php');
+require_once (ROOT_DIR_SRC . 'utils/CollectionUtils.php');
+require_once (ROOT_DIR_SRC . 'utils/StringUtils.php');
+require_once (ROOT_DIR_SRC . 'utils/LoggerUtils.php');
 
 /**
  *
@@ -28,7 +28,7 @@ class TplEngineUtils
 	public static function getTplEngineInstance() {
         if(is_null(self::$instance))
         {
-            importLib('rain.tpl.class.php');
+            require_once (ROOT_DIR_SRC . 'vendors/rain.tpl.class.php');
             RainTPL::$tpl_dir = ROOT_DIR_SRC . "view" . DIRECTORY_SEPARATOR;
             RainTPL::$cache_dir = ROOT_DIR_SRC . ".." . DIRECTORY_SEPARATOR . "tmp" . DIRECTORY_SEPARATOR;
             RainTPL::$path_replace = false;
