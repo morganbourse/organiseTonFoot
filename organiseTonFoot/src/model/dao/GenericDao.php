@@ -1,18 +1,20 @@
 <?php
-require_once (ROOT_DIR_SRC . 'model/utils/SafePDO.php');
-require_once (ROOT_DIR_SRC . 'utils/IniManager.php');
-require_once (ROOT_DIR_SRC . 'utils/LoggerUtils.php');
-require_once (ROOT_DIR_SRC . 'utils/CollectionUtils.php');
+importModel('utils/SafePDO.php');
+importUtil('IniManager.php');
+importUtil('LoggerUtils.php');
+importUtil('CollectionUtils.php');
 class GenericDao {
     protected $database;
     protected $tableName;
     protected $logger;
+    protected $hasOpenedTransaction;
     
     /**
      * Constructeur
      */
     public function GenericDao($tableName) {
         $this->logger = LoggerUtils::getLogger ();
+        $this->hasOpenedTransaction = false;
         
         try {
             $settings = IniManager::getInstance ( ROOT_DIR_CONFIG . "config.ini" );
@@ -135,50 +137,6 @@ class GenericDao {
     }
     
     /**
-     * map bean to do object
-     *
-     * @param unknown $bean            
-     * @param unknown $do            
-     */
-    public function mapBeanToDo($bean, &$do, Array $mapping = null, Array $ignoreFields = null) {
-        $reflectedBeanObject = new ReflectionObject ( $bean );
-        $beanFieldsArray = $reflectedBeanObject->getProperties ( ReflectionProperty::IS_PRIVATE );
-        
-        $reflectedDoObject = new ReflectionObject ( $do );
-        $doFieldsArray = $reflectedDoObject->getProperties ( ReflectionProperty::IS_PRIVATE );        
-        
-        if (CollectionUtils::isNotEmpty ( $beanFieldsArray ) && CollectionUtils::isNotEmpty ( $doFieldsArray ) && CollectionUtils::collectionSameSize ( $beanFieldsArray, $doFieldsArray )) {
-            foreach ( $beanFieldsArray as $beanField ) {
-                $beanField->setAccessible ( true );
-                $beanFieldName = $beanField->getName ();
-                
-                if(in_array($beanFieldName, $ignoreFields))
-                {
-                    continue;
-                }
-                
-                if ($reflectedDoObject->hasProperty ( $beanFieldName )) {
-                    $doProperty = $reflectedDoObject->getProperty ( $beanFieldName );
-                    $doProperty->setAccessible ( true );
-                    $doProperty->setValue ( $do, $beanField->getValue ( $bean ) );
-                }
-                else if((CollectionUtils::isNotEmpty($mapping) && array_key_exists($beanFieldName, $mapping)) && $reflectedDoObject->hasProperty ( $mapping[$beanFieldName] ))
-                {
-                    $doProperty = $reflectedDoObject->getProperty ( $mapping[$beanFieldName] );
-                    $doProperty->setAccessible ( true );
-                    $doProperty->setValue ( $do, $beanField->getValue ( $bean ) );
-                }
-                else 
-                {
-                    $msg = "Property '" . $beanFieldName . "' does not exists in " . $reflectedDoObject->getName() . " object.";
-                    $this->logger->error($msg);
-                    throw new Exception($msg);
-                }
-            }
-        }
-    }
-    
-    /**
      * Extract the table name linked to the entity object
      *
      * @param ReflectionObject $refletedObject            
@@ -196,6 +154,47 @@ class GenericDao {
         }
         
         return $tableName;
+    }
+    
+    /**
+     * begin sql transaction
+     */
+    public function beginTransaction()
+    {
+        $this->database->beginTransaction();
+        $this->hasOpenedTransaction = true;
+    }
+    
+    /**
+     * commit opened transaction
+     */
+    public function commitTransaction()
+    {
+        $this->checkOpenedTransaction();
+        
+        $this->database->commit();
+    }
+    
+    /**
+     * rollback opened transaction
+     */
+    public function rollbackTransaction()
+    {
+        $this->checkOpenedTransaction();
+    
+        $this->database->rollBack();
+    }
+    
+    /**
+     * Thrown an exception if no transaction opened
+     * @throws Exception
+     */
+    private function checkOpenedTransaction()
+    {
+        if(!$this->hasOpenedTransaction)
+        {
+            throw new Exception("You tried to commit or rollback transaction, but no transaction has been opened...");
+        }
     }
     
     /**

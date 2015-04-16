@@ -1,7 +1,7 @@
 <?php
-require_once (ROOT_DIR_SRC . 'model/dao/GenericDao.php');
-require_once (ROOT_DIR_SRC . 'model/dao/player/IPlayerDao.php');
-require_once (ROOT_DIR_SRC . 'model/entity/player/Player.php');
+importModel('dao/GenericDao.php');
+importModel('dao/player/IPlayerDao.php');
+importModel('entity/player/Player.php');
 class PlayerDao extends GenericDao implements IPlayerDao
 {
     const TABLE_NAME = "Players";

@@ -1,6 +1,6 @@
 <?php
-require_once(ROOT_DIR . '/src/utils/mail/MailFormatException.php');
-require_once(ROOT_DIR . '/src/utils/StringUtils.php');
+importUtil('mail/MailFormatException.php');
+importUtil('StringUtils.php');
 /**
  * Send mail utils class
  * @author Morgan
